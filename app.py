@@ -3,6 +3,7 @@ from data import Article
 from flask_mysqldb import MySQL
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from passlib.hash import sha256_crypt
+# from functools import wraps
 import os
 
 
@@ -90,9 +91,29 @@ def login():
             error = 'Username not found'
             return render_template('login.html',error=error)
     return render_template('login.html')
+
 @app.route('/dashboard')
 def dashboard():
     return render_template('dashboard.html')
+
+class ArticleForm(Form):
+    title = StringField('Title', [validators.Length(min=1, max=200)])
+    body = StringField('Body', [validators.Length(min=30)])
+
+@app.route('/add_article',methods=['GET','POST'])
+def add_article():
+    form = ArticleForm(request.form)
+    if request.method=='POST' and form.validate():
+        title = form.title.data
+        body = form.body.data
+
+        cur = mysql.connection.cursor()
+        cur.execute('INSERT INTO articles(title,body,author) VALUES(%s,%s,%s)',(title,body,session['username']))
+        mysql.connection.commit()
+        cur.close()
+        flash('Article created', 'success')
+        return redirect(url_for('dashboard'))
+    return render_template('add_article.html',form=form)
 
 @app.route('/logout')
 def logout():

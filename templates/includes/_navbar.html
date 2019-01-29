@@ -19,9 +19,14 @@
 
             <ul class="nav navbar-nav navbar-right">
                 <!-- <li class="nav-item"> -->
+                  {% if session.logged_in %}
+                  <li>  <a class="nav-link" href="/dashboard">Dashboard<span class="sr-only">(current)</span></a></li>
+                  <li>  <a class="nav-link" href="/logout">Logout<span class="sr-only">(current)</span></a></li>  
+                  {% else %}
                  <li>  <a class="nav-link" href="/register">Register<span class="sr-only">(current)</span></a></li>
                  <li>  <a class="nav-link" href="/login">Login<span class="sr-only">(current)</span></a></li>
-                 <li>  <a class="nav-link" href="/logout">Logout<span class="sr-only">(current)</span></a></li>
+                 {% endif %}
+                
                 <!-- </li> -->
                 </ul>
             <!-- <li class="nav-item dropdown">
