@@ -94,6 +94,11 @@ def login():
 def dashboard():
     return render_template('dashboard.html')
 
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash('You are logged out')
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
     app.secret_key = os.environ['SECRET_KEY']
